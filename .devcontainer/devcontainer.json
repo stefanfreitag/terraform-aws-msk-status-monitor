@@ -1,0 +1,30 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/alpine
+{
+	"name": "devcontainer",
+	"image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/aws-cli:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/checkov:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"version": "1.5.0",
+			"tflint": "0.47.0",
+			"installTFsec": "true",
+			"installTerraformDocs": "true"
+		},
+		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/terrascan:1": {
+			"version": "latest"
+		}
+	},
+	"shutdownAction": "stopContainer",
+	"postCreateCommand": {
+		"one": "tflint --init"
+	}}
