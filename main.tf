@@ -20,8 +20,7 @@ resource "aws_sns_topic_subscription" "msk_health_sns_topic_email_target" {
 
 # IAM role
 resource "aws_iam_role" "msk_health_lambda_role" {
-  name = "msk-health-lambda-role-${random_id.id.hex}"
-
+  name               = "msk-health-lambda-role-${random_id.id.hex}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -55,8 +54,7 @@ resource "aws_iam_policy" "msk_health_lambda_role_policy" {
   name        = "msk-health-lambda-role-policy-${random_id.id.hex}"
   path        = "/"
   description = "IAM policy msk health solution lambda"
-
-  policy = <<EOF
+  policy      = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -87,12 +85,11 @@ resource "aws_iam_policy" "msk_health_lambda_role_policy" {
     ]
 }
 EOF
-  tags   = var.tags
+  tags        = var.tags
 }
 
-
 resource "aws_lambda_function" "msk_health_lambda" {
-  filename                       = "${path.module}/python/hello-python.zip"
+  filename                       = data.archive_file.status_checker_code.output_path
   function_name                  = "msk_status_monitor-${random_id.id.hex}"
   description                    = "MSK Status Monitor"
   role                           = aws_iam_role.msk_health_lambda_role.arn
@@ -102,10 +99,13 @@ resource "aws_lambda_function" "msk_health_lambda" {
   memory_size                    = 128
   timeout                        = 60
   tags                           = var.tags
-
+  tracing_config {
+    mode = "Active"
+  }
   environment {
     variables = {
-      SNS_TOPIC_ARN = aws_sns_topic.msk_health_sns_topic.arn
+      SNS_TOPIC_ARN   = aws_sns_topic.msk_health_sns_topic.arn
+      SUPPRESS_STATES = join(",", var.ignore_states)
     }
   }
 
@@ -137,6 +137,6 @@ resource "aws_lambda_permission" "allow_cw_call_lambda" {
 # Log group for the Lambda function
 resource "aws_cloudwatch_log_group" "msk_health_lambda_log_groups" {
   name              = "/aws/lambda/msk_status_monitor-${random_id.id.hex}"
-  retention_in_days = 30
+  retention_in_days = var.log_retion_period_in_days
   tags              = var.tags
 }
