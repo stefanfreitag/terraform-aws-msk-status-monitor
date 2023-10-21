@@ -68,11 +68,16 @@ resource "aws_iam_policy" "msk_health_lambda_role_policy" {
         },
         {
             "Action": [
-                "kafka:ListClusters",
-                "kafka:DescribeCluster",
-                "kafka:DescribeClusterV2"
+                "kafka:ListClustersV2"
             ],
             "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kafka:DescribeClusterV2"
+            ],
+            "Resource": "arn:aws:kafka:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:cluster/*",
             "Effect": "Allow"
         },
         {
