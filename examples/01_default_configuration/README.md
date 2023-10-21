@@ -1,3 +1,7 @@
+## Example 01
+
+Create a MSK status monitor with only a tag attached.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

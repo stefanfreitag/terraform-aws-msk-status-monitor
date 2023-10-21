@@ -9,7 +9,7 @@ def lambda_handler(event, context):
     # Create an MSK client
     client = boto3.client("kafka", region_name=region)
     # Retrieve a list of clusters
-    response = client.list_clusters()
+    response = client.list_clusters_v2()
     # Extract the cluster ARNs from the response
     cluster_arns = response["ClusterInfoList"]
 
@@ -22,9 +22,9 @@ def lambda_handler(event, context):
 
     for cluster in cluster_arns:
         arn = cluster["ClusterArn"]
-        response = client.describe_cluster(ClusterArn=arn)
+        response = client.describe_cluster_v2(ClusterArn=arn)
         status = response["ClusterInfo"]["State"]
-        print("The cluster is in state {}.".format(status))
+        print("The cluster {} is in state {}.".format(arn,status))
         sns_client = boto3.client("sns")
         if status not in valid_states:
             print("The MSK cluster: {} needs attention.".format(arn))
