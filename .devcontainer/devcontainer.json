@@ -12,8 +12,8 @@
 			"version": "latest"
 		},
 		"ghcr.io/devcontainers/features/terraform:1": {
-			"version": "1.5.0",
-			"tflint": "0.47.0",
+			"version": "1.6.2",
+			"tflint": "0.48.0",
 			"installTFsec": "true",
 			"installTerraformDocs": "true"
 		},
