@@ -24,6 +24,16 @@ variable "log_retion_period_in_days" {
   }
 }
 
+variable "memory_size" {
+  type        = number
+  description = "Amount of memory in MByte that the Lambda Function can use at runtime. Default is 160."
+  default     = 160
+  validation {
+    condition     = var.memory_size >= 128 && var.memory_size <= 10240
+    error_message = "memory_size must be between 128 and 10240"
+  }
+}
+
 variable "schedule_expression" {
   description = "The schedule expression for the CloudWatch event rule. Default is 'rate(15 minutes)'."
   type        = string

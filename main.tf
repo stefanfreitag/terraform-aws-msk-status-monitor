@@ -101,7 +101,7 @@ resource "aws_lambda_function" "msk_health_lambda" {
   handler                        = "index.lambda_handler"
   runtime                        = "python3.11"
   reserved_concurrent_executions = 1
-  memory_size                    = 128
+  memory_size                    = var.memory_size
   source_code_hash               = data.archive_file.status_checker_code.output_base64sha256
   timeout                        = 60
   tags                           = var.tags
