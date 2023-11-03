@@ -48,8 +48,6 @@ resource "aws_iam_role_policy_attachment" "msk_health_permissions" {
   aws_iam_role.msk_health_lambda_role]
 }
 
-### TODO: check describe ClusterV2 permissions
-# iam policy for lambda role
 resource "aws_iam_policy" "msk_health_lambda_role_policy" {
   name        = "msk-health-lambda-role-policy-${random_id.id.hex}"
   path        = "/"
@@ -81,6 +79,13 @@ resource "aws_iam_policy" "msk_health_lambda_role_policy" {
             "Effect": "Allow"
         },
         {
+          "Action": [
+               "cloudwatch:PutMetricData"
+          ],
+          "Resource": "*",
+          "Effect": "Allow"
+        },
+        {
             "Action": [
                 "sns:Publish"
             ],
@@ -110,8 +115,11 @@ resource "aws_lambda_function" "msk_health_lambda" {
   }
   environment {
     variables = {
-      SNS_TOPIC_ARN   = aws_sns_topic.msk_health_sns_topic.arn
-      SUPPRESS_STATES = join(",", var.ignore_states)
+      CLUSTER_ARNS              = join(",", var.cluster_arns)
+      SNS_TOPIC_ARN             = aws_sns_topic.msk_health_sns_topic.arn
+      ENABLE_CLOUDWATCH_METRICS = var.enable_cloudwatch_alarms
+      ENABLE_SNS_NOTIFICATIONS  = var.enable_sns_notifications
+      SUPPRESS_STATES           = join(",", var.ignore_states)
     }
   }
 
@@ -145,4 +153,27 @@ resource "aws_cloudwatch_log_group" "msk_health_lambda_log_groups" {
   name              = "/aws/lambda/msk_status_monitor-${random_id.id.hex}"
   retention_in_days = var.log_retion_period_in_days
   tags              = var.tags
+}
+
+
+resource "aws_cloudwatch_metric_alarm" "this" {
+  for_each                  = toset(local.cluster_names)
+  namespace                 = "Custom/Kafka"
+  period                    = 300
+  metric_name               = "Status"
+  alarm_name                = "msk_status_monitor-${each.key}-${random_id.id.hex}"
+  comparison_operator       = "GreaterThanThreshold"
+  alarm_description         = "This alarm triggers on MSK cluster status"
+  evaluation_periods        = 2
+  statistic                 = "Average"
+  threshold                 = 0
+  insufficient_data_actions = []
+  dimensions = {
+    ClusterName = each.key
+  }
+  tags = var.tags
+}
+
+locals {
+  cluster_names = var.enable_cloudwatch_alarms ? sort([for arn in var.cluster_arns : element(split("/", arn), 1)]) : []
 }
