@@ -161,7 +161,7 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   namespace                 = "Custom/Kafka"
   period                    = 300
   metric_name               = "Status"
-  alarm_name                = "msk_status_monitor-${each.key}-${random_id.id.hex}"
+  alarm_name                = "msk-status-monitor-${each.key}-${random_id.id.hex}"
   comparison_operator       = "GreaterThanThreshold"
   alarm_description         = "This alarm triggers on MSK cluster status"
   evaluation_periods        = 2
