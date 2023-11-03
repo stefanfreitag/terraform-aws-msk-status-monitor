@@ -1,25 +1,22 @@
+from typing import List
+
 import boto3
 import os
 
+CLUSTER_ARNS: list[str] = os.environ["CLUSTER_ARNS"].split(",")
+ENABLE_CLOUDWATCH_METRICS: str = os.environ["ENABLE_CLOUDWATCH_METRICS"]
+ENABLE_SNS_NOTIFICATIONS: str = os.environ["ENABLE_SNS_NOTIFICATIONS"]
+LAMBDASNSTOPIC: str = os.environ["SNS_TOPIC_ARN"]
+SUPPRESS_STATES: list[str] = os.environ["SUPPRESS_STATES"].split(",")
+
 
 def lambda_handler(event, context):
-    CLUSTER_ARNS = os.environ["CLUSTER_ARNS"].split(",")
-    ENABLE_CLOUDWATCH_METRICS = os.environ["ENABLE_CLOUDWATCH_METRICS"]
-    ENABLE_SNS_NOTIFICATIONS = os.environ["ENABLE_SNS_NOTIFICATIONS"]
-    LAMBDASNSTOPIC = os.environ["SNS_TOPIC_ARN"]
-    SUPPRESS_STATES = os.environ["SUPPRESS_STATES"].split(",")
-
     region = "eu-central-1"
 
     # Create boto clients
     kafka = boto3.client("kafka", region_name=region)
     cloudwatch = boto3.client("cloudwatch")
     sns = boto3.client("sns")
-
-    # Retrieve a list of clusters
-    response = kafka.list_clusters_v2()
-    # Extract the cluster ARNs from the response
-    cluster_arns = response["ClusterInfoList"]
 
     valid_states = ["ACTIVE"] + SUPPRESS_STATES
     print(
@@ -45,18 +42,9 @@ def lambda_handler(event, context):
             )
         )
 
-        # Cover situation where cluster has been deleted.
-        if ENABLE_CLOUDWATCH_METRICS:
-            x = 1 if status not in valid_states else 0
-            put_custom_metric(cloudwatch=cloudwatch, cluster_name=cluster_name, value=x)
-            print(
-                "Put custom metric for cluster: {} with value: {}".format(
-                    cluster_name, x
-                )
-            )
-        if ENABLE_SNS_NOTIFICATIONS:
-            if status not in valid_states:
-                print("The MSK cluster: {} needs attention.".format(arn))
+        if status not in valid_states:
+            print("The MSK cluster {} needs attention.".format(arn))
+            if ENABLE_SNS_NOTIFICATIONS:
                 sns.publish(
                     TopicArn=LAMBDASNSTOPIC,
                     Message="MSK cluster "
@@ -65,14 +53,20 @@ def lambda_handler(event, context):
                     + status,
                     Subject="MSK Health Warning!",
                 )
+            if ENABLE_CLOUDWATCH_METRICS:
+                put_custom_metric(
+                    cloudwatch=cloudwatch, cluster_name=cluster_name, value=1
+                )
         else:
             print(
                 "The MSK cluster {} is in a healthy state, and is reachable and available for use.".format(
                     arn
                 )
             )
-
-    # Return the status
+            if ENABLE_CLOUDWATCH_METRICS:
+                put_custom_metric(
+                    cloudwatch=cloudwatch, cluster_name=cluster_name, value=0
+                )
     return {"statusCode": 200, "body": "OK"}
 
 

@@ -27,5 +27,8 @@ terraform.rc
 # Python virtual environment
 .venv
 
+# JetBrains IDEs
+.idea
+
 # Lambda zip directory
 out/
