@@ -1,5 +1,8 @@
 module "msk_monitor" {
-  source = "../.."
+  source                   = "../.."
+  cluster_arns             = []
+  enable_cloudwatch_alarms = true
+  schedule_expression      = "rate(2 minutes)"
   tags = {
     "Name" = "msk-monitor"
   }
