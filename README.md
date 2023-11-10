@@ -65,6 +65,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cloudwatch_metric_alarm_arns"></a> [cloudwatch\_metric\_alarm\_arns](#output\_cloudwatch\_metric\_alarm\_arns) | A map consisting of MSK cluster names and their CloudWatch metric alarm ARNs. |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | The ARN of the IAM role. |
 | <a name="output_sns_topic_arn"></a> [sns\_topic\_arn](#output\_sns\_topic\_arn) | The ARN of the SNS topic. |
 <!-- END_TF_DOCS -->
