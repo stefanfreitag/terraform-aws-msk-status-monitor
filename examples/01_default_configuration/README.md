@@ -30,5 +30,7 @@ No inputs.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_cloudwatch_alert_arns"></a> [cloudwatch\_alert\_arns](#output\_cloudwatch\_alert\_arns) | A map consisting of MSK cluster names and their CloudWatch metric alarm ARNs. |
 <!-- END_TF_DOCS -->
