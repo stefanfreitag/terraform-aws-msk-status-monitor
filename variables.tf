@@ -1,23 +1,33 @@
 variable "cluster_arns" {
-  description = "List of MSK cluster ARNs. Default is empty list."
+  description = "List of MSK cluster ARNs. Default is `[]`."
   type        = list(string)
   default     = []
 }
 
 variable "email" {
-  description = "List of e-mail addresses subscribing to the SNS topic. Default is empty list."
+  description = "List of e-mail addresses subscribing to the SNS topic. Default is `[]`."
   type        = list(string)
   default     = []
 }
 
 variable "enable_cloudwatch_alarms" {
-  description = "Setup CloudWatch alarms for the MSK clusters state. For each state a separate alarm will be created. Default is false."
+  description = "Setup CloudWatch alarms for the MSK clusters state. For each state a separate alarm will be created. Default is `false`."
   type        = bool
   default     = false
 }
 
+variable "cloudwatch_alarms_treat_missing_data" {
+  description = "Sets how the alarms handle missing data points. The following values are supported: `missing`, `ignore`, `breaching` and `notBreaching`. Default is `breaching`."
+  type        = string
+  default     = "breaching"
+  validation {
+    condition     = can(regex("^(missing|ignore|breaching|notBreaching)$", var.cloudwatch_alarms_treat_missing_data))
+    error_message = "The value must be one of missing, ignore, breaching or notBreaching."
+  }
+}
+
 variable "enable_sns_notifications" {
-  description = "Setup SNS notifications for the MSK clusters state. Default is false."
+  description = "Setup SNS notifications for the MSK clusters state. Default is `false`."
   type        = bool
   default     = false
 }
@@ -33,7 +43,7 @@ variable "ignore_states" {
 variable "log_retion_period_in_days" {
   type        = number
   default     = 365
-  description = "Number of days logs will be retained. Default is 365 days."
+  description = "Number of days logs will be retained. Default is `365`."
 
   validation {
     condition = contains([1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365,
@@ -44,7 +54,7 @@ variable "log_retion_period_in_days" {
 
 variable "memory_size" {
   type        = number
-  description = "Amount of memory in MByte that the Lambda Function can use at runtime. Default is 160."
+  description = "Amount of memory in MByte that the Lambda function can use at runtime. Default is `160`."
   default     = 160
   validation {
     condition     = var.memory_size >= 128 && var.memory_size <= 10240
@@ -53,13 +63,13 @@ variable "memory_size" {
 }
 
 variable "schedule_expression" {
-  description = "The schedule expression for the CloudWatch event rule. Default is 'rate(5 minutes)'."
+  description = "The schedule expression for the CloudWatch event rule. Default is `rate(5 minutes)`."
   type        = string
   default     = "rate(5 minutes)"
 }
 
 variable "tags" {
-  description = "A map of tags to add to all resources. Default is empty map."
+  description = "A map of tags to add to all resources. Default is `{}`."
   type        = map(string)
   default = {
   }
