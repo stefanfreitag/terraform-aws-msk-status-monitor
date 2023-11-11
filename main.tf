@@ -163,11 +163,14 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   metric_name               = "Status"
   alarm_name                = "msk-status-monitor-${each.key}-${random_id.id.hex}"
   comparison_operator       = "GreaterThanThreshold"
-  alarm_description         = "This alarm triggers on MSK cluster status"
+  alarm_description         = "This alarm triggers on MSK cluster status."
   evaluation_periods        = 2
   statistic                 = "Average"
   threshold                 = 0
+  treat_missing_data        = var.cloudwatch_alarms_treat_missing_data
+  alarm_actions             = []
   insufficient_data_actions = []
+  ok_actions                = []
   dimensions = {
     ClusterName = each.key
   }
