@@ -52,6 +52,12 @@ variable "log_retion_period_in_days" {
   }
 }
 
+variable "name" {
+  type        = string
+  description = "Name of the health monitor. Default is `msk_status_monitor`."
+  default     = "msk_status_monitor"
+}
+
 variable "memory_size" {
   type        = number
   description = "Amount of memory in MByte that the Lambda function can use at runtime. Default is `160`."
