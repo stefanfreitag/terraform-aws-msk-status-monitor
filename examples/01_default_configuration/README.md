@@ -18,7 +18,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_msk_monitor"></a> [msk\_monitor](#module\_msk\_monitor) | ../.. | n/a |
+| <a name="module_msk_monitor_1"></a> [msk\_monitor\_1](#module\_msk\_monitor\_1) | ../.. | n/a |
 
 ## Resources
 
