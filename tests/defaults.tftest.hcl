@@ -10,6 +10,15 @@ run "eventbridge_default_schedule_expression" {
   }
 }
 
+run "eventbridge_default_is_enabled" {
+  command = plan
+
+  assert {
+    condition     = aws_cloudwatch_event_rule.this.state == "ENABLED"
+    error_message = "CloudWatch EventBride rule state is not matching state of ENABLED"
+  }
+}
+
 ##
 # The default value for CloudWatch Alarm property treat_missing_data should be set to breaching.
 ##

@@ -140,7 +140,7 @@ resource "aws_cloudwatch_event_rule" "this" {
   name                = var.name
   description         = "Scheduled execution of the MSK monitor"
   schedule_expression = var.schedule_expression
-  is_enabled          = true
+  state               = "ENABLED"
   tags                = var.tags
 }
 
