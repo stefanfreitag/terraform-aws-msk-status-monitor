@@ -5,6 +5,26 @@
 
 This module deploys a Lambda function that checks the health of  MSK cluster and sends a notification if a cluster is unhealthy.
 
+If the target for `ok_actions`, `alarm_actions` or `insufficient_data_actions` is an SNS topic using a KMS key, ensure
+that CloudWatch Alarms has sufficient permissions to publish messages.
+For example:
+```shell
+statement {
+    sid    = "Allow access for CloudWatch Alarms"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudwatch.amazonaws.com"]
+    }
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = ["*"]
+
+  }
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -49,15 +69,18 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_alarm_actions"></a> [alarm\_actions](#input\_alarm\_actions) | The list of actions to execute when this alarm transitions into an ALARM state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`. | `list(string)` | `null` | no |
 | <a name="input_cloudwatch_alarms_treat_missing_data"></a> [cloudwatch\_alarms\_treat\_missing\_data](#input\_cloudwatch\_alarms\_treat\_missing\_data) | Sets how the alarms handle missing data points. The following values are supported: `missing`, `ignore`, `breaching` and `notBreaching`. Default is `breaching`. | `string` | `"breaching"` | no |
 | <a name="input_cluster_arns"></a> [cluster\_arns](#input\_cluster\_arns) | List of MSK cluster ARNs. Default is `[]`. | `list(string)` | `[]` | no |
 | <a name="input_email"></a> [email](#input\_email) | List of e-mail addresses subscribing to the SNS topic. Default is `[]`. | `list(string)` | `[]` | no |
 | <a name="input_enable_cloudwatch_alarms"></a> [enable\_cloudwatch\_alarms](#input\_enable\_cloudwatch\_alarms) | Setup CloudWatch alarms for the MSK clusters state. For each state a separate alarm will be created. Default is `false`. | `bool` | `false` | no |
 | <a name="input_enable_sns_notifications"></a> [enable\_sns\_notifications](#input\_enable\_sns\_notifications) | Setup SNS notifications for the MSK clusters state. Default is `false`. | `bool` | `false` | no |
 | <a name="input_ignore_states"></a> [ignore\_states](#input\_ignore\_states) | Suppress warnings for the listed MSK states. Default: ['MAINTENANCE'] | `list(string)` | <pre>[<br>  "MAINTENANCE"<br>]</pre> | no |
+| <a name="input_insufficient_data_actions"></a> [insufficient\_data\_actions](#input\_insufficient\_data\_actions) | The list of actions to execute when this alarm transitions into an INSUFFICIENT\_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`. | `list(string)` | `null` | no |
 | <a name="input_log_retion_period_in_days"></a> [log\_retion\_period\_in\_days](#input\_log\_retion\_period\_in\_days) | Number of days logs will be retained. Default is `365`. | `number` | `365` | no |
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | Amount of memory in MByte that the Lambda function can use at runtime. Default is `160`. | `number` | `160` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the health monitor. Default is `msk_status_monitor`. | `string` | `"msk_status_monitor"` | no |
+| <a name="input_ok_actions"></a> [ok\_actions](#input\_ok\_actions) | The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN). | `list(string)` | `null` | no |
 | <a name="input_schedule_expression"></a> [schedule\_expression](#input\_schedule\_expression) | The schedule expression for the CloudWatch event rule. Default is `rate(5 minutes)`. | `string` | `"rate(5 minutes)"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources. Default is `{}`. | `map(string)` | `{}` | no |
 

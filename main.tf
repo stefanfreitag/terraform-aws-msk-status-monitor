@@ -178,9 +178,9 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   statistic                 = "Average"
   threshold                 = 0
   treat_missing_data        = var.cloudwatch_alarms_treat_missing_data
-  alarm_actions             = []
-  insufficient_data_actions = []
-  # TODO:  ok_actions                = [var.sns_topic_alarms_arn]
+  ok_actions                = var.ok_actions
+  alarm_actions             = var.alarm_actions
+  insufficient_data_actions = var.insufficient_data_actions
   dimensions = {
     ClusterName = each.key
   }
