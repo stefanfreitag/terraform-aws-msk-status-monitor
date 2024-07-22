@@ -26,6 +26,24 @@ variable "cloudwatch_alarms_treat_missing_data" {
   }
 }
 
+variable "alarm_actions" {
+  description = "The list of actions to execute when this alarm transitions into an ALARM state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`."
+  type        = list(string)
+  default     = null
+}
+
+variable "insufficient_data_actions" {
+  description = "The list of actions to execute when this alarm transitions into an INSUFFICIENT_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`."
+  type        = list(string)
+  default     = null
+}
+
+variable "ok_actions" {
+  description = "The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN)."
+  type        = list(string)
+  default     = null
+}
+
 variable "enable_sns_notifications" {
   description = "Setup SNS notifications for the MSK clusters state. Default is `false`."
   type        = bool
