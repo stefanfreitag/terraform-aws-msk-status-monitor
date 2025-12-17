@@ -68,7 +68,7 @@ resource "aws_iam_policy" "this" {
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
             ],
-            "Resource": "arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.id}:log-group:/aws/lambda/*",
+            "Resource": "arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/*",
             "Effect": "Allow"
         },
         {
@@ -82,7 +82,7 @@ resource "aws_iam_policy" "this" {
             "Action": [
                 "kafka:DescribeClusterV2"
             ],
-            "Resource": "arn:aws:kafka:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:cluster/*",
+            "Resource": "arn:aws:kafka:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:cluster/*",
             "Effect": "Allow"
         },
         {
