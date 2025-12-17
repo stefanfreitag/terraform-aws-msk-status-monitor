@@ -32,7 +32,7 @@ statement {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | >=2.4.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.32 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.21.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.5.1 |
 
 ## Providers
@@ -40,7 +40,7 @@ statement {
 | Name | Version |
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | >=2.4.0 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.32 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.21.0 |
 
 ## Modules
 
@@ -75,7 +75,7 @@ No modules.
 | <a name="input_email"></a> [email](#input\_email) | List of e-mail addresses subscribing to the SNS topic. Default is `[]`. | `list(string)` | `[]` | no |
 | <a name="input_enable_cloudwatch_alarms"></a> [enable\_cloudwatch\_alarms](#input\_enable\_cloudwatch\_alarms) | Setup CloudWatch alarms for the MSK clusters state. For each state a separate alarm will be created. Default is `false`. | `bool` | `false` | no |
 | <a name="input_enable_sns_notifications"></a> [enable\_sns\_notifications](#input\_enable\_sns\_notifications) | Setup SNS notifications for the MSK clusters state. Default is `false`. | `bool` | `false` | no |
-| <a name="input_ignore_states"></a> [ignore\_states](#input\_ignore\_states) | Suppress warnings for the listed MSK states. Default: ['MAINTENANCE'] | `list(string)` | <pre>[<br>  "MAINTENANCE"<br>]</pre> | no |
+| <a name="input_ignore_states"></a> [ignore\_states](#input\_ignore\_states) | Suppress warnings for the listed MSK states. Default: ['MAINTENANCE'] | `list(string)` | <pre>[<br/>  "MAINTENANCE"<br/>]</pre> | no |
 | <a name="input_insufficient_data_actions"></a> [insufficient\_data\_actions](#input\_insufficient\_data\_actions) | The list of actions to execute when this alarm transitions into an INSUFFICIENT\_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`. | `list(string)` | `null` | no |
 | <a name="input_log_retion_period_in_days"></a> [log\_retion\_period\_in\_days](#input\_log\_retion\_period\_in\_days) | Number of days logs will be retained. Default is `365`. | `number` | `365` | no |
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | Amount of memory in MByte that the Lambda function can use at runtime. Default is `160`. | `number` | `160` | no |
