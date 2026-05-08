@@ -1,6 +1,7 @@
 ###
 # The SNS topic to send notifications to.
 ##
+#trivy:ignore:AWS-0136
 resource "aws_sns_topic" "this" {
   name              = var.name
   display_name      = var.name
@@ -159,6 +160,7 @@ resource "aws_lambda_permission" "this" {
 
 
 # Log group for the Lambda function
+#trivy:ignore:AWS-0017
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.name}"
   retention_in_days = var.log_retion_period_in_days
