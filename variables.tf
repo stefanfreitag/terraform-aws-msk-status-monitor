@@ -1,19 +1,13 @@
+variable "alarm_actions" {
+  description = "The list of actions to execute when this alarm transitions into an ALARM state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`."
+  type        = list(string)
+  default     = null
+}
+
 variable "cluster_arns" {
   description = "List of MSK cluster ARNs. Default is `[]`."
   type        = list(string)
   default     = []
-}
-
-variable "email" {
-  description = "List of e-mail addresses subscribing to the SNS topic. Default is `[]`."
-  type        = list(string)
-  default     = []
-}
-
-variable "enable_cloudwatch_alarms" {
-  description = "Setup CloudWatch alarms for the MSK clusters state. For each state a separate alarm will be created. Default is `false`."
-  type        = bool
-  default     = false
 }
 
 variable "cloudwatch_alarms_treat_missing_data" {
@@ -26,22 +20,16 @@ variable "cloudwatch_alarms_treat_missing_data" {
   }
 }
 
-variable "alarm_actions" {
-  description = "The list of actions to execute when this alarm transitions into an ALARM state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`."
+variable "email" {
+  description = "List of e-mail addresses subscribing to the SNS topic. Default is `[]`."
   type        = list(string)
-  default     = null
+  default     = []
 }
 
-variable "insufficient_data_actions" {
-  description = "The list of actions to execute when this alarm transitions into an INSUFFICIENT_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`."
-  type        = list(string)
-  default     = null
-}
-
-variable "ok_actions" {
-  description = "The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN)."
-  type        = list(string)
-  default     = null
+variable "enable_cloudwatch_alarms" {
+  description = "Setup CloudWatch alarms for the MSK clusters state. For each state a separate alarm will be created. Default is `false`."
+  type        = bool
+  default     = false
 }
 
 variable "enable_sns_notifications" {
@@ -58,22 +46,22 @@ variable "ignore_states" {
   ]
 }
 
-variable "log_retion_period_in_days" {
+variable "insufficient_data_actions" {
+  description = "The list of actions to execute when this alarm transitions into an INSUFFICIENT_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN). Default is `null`."
+  type        = list(string)
+  default     = null
+}
+
+variable "log_retention_period_in_days" {
   type        = number
   default     = 365
   description = "Number of days logs will be retained. Default is `365`."
 
   validation {
     condition = contains([1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365,
-    400, 545, 731, 1096, 1827, 2192, 2557, 2992, 3288, 3653], var.log_retion_period_in_days)
-    error_message = "log_retion_period_in_days must be one of the allowed values: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653"
+    400, 545, 731, 1096, 1827, 2192, 2557, 2992, 3288, 3653], var.log_retention_period_in_days)
+    error_message = "log_retention_period_in_days must be one of the allowed values: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653"
   }
-}
-
-variable "name" {
-  type        = string
-  description = "Name of the health monitor. Default is `msk_status_monitor`."
-  default     = "msk_status_monitor"
 }
 
 variable "memory_size" {
@@ -84,6 +72,18 @@ variable "memory_size" {
     condition     = var.memory_size >= 128 && var.memory_size <= 10240
     error_message = "memory_size must be between 128 and 10240"
   }
+}
+
+variable "name" {
+  type        = string
+  description = "Name of the health monitor. Default is `msk_status_monitor`."
+  default     = "msk_status_monitor"
+}
+
+variable "ok_actions" {
+  description = "The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN)."
+  type        = list(string)
+  default     = null
 }
 
 variable "schedule_expression" {
