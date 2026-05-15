@@ -51,9 +51,6 @@ EOF
 resource "aws_iam_role_policy_attachment" "this" {
   role       = aws_iam_role.this.name
   policy_arn = aws_iam_policy.this.arn
-
-  depends_on = [aws_iam_policy.this,
-  aws_iam_role.this]
 }
 
 resource "aws_iam_policy" "this" {
@@ -163,7 +160,7 @@ resource "aws_lambda_permission" "this" {
 #trivy:ignore:AWS-0017
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.name}"
-  retention_in_days = var.log_retion_period_in_days
+  retention_in_days = var.log_retention_period_in_days
   tags              = var.tags
 }
 
@@ -187,8 +184,4 @@ resource "aws_cloudwatch_metric_alarm" "this" {
     ClusterName = each.key
   }
   tags = var.tags
-}
-
-locals {
-  cluster_names = var.enable_cloudwatch_alarms ? sort([for arn in var.cluster_arns : element(split("/", arn), 1)]) : []
 }
